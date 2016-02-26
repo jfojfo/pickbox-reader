@@ -1,9 +1,10 @@
 var webpack = require('webpack')
 var config = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 // eval-source-map is faster for development
-config.devtool = 'eval-source-map'
+//config.devtool = 'eval-source-map'
 
 // add hot-reload related code to entry chunks
 var polyfill = 'eventsource-polyfill'
@@ -22,6 +23,12 @@ config.plugins = (config.plugins || []).concat([
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoErrorsPlugin(),
+  new webpack.DefinePlugin({
+    DEBUG: true
+  }),
+  new ExtractTextPlugin('[name].css', {
+    allChunks: true
+  }),
   // https://github.com/ampedandwired/html-webpack-plugin
   new HtmlWebpackPlugin({
     filename: 'index.html',
