@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="page" id="app">
         <header class="bar bar-nav">
             <a class="button button-link button-nav pull-left" href="/" data-transition='slide-out'>
                 <span class="icon icon-left"></span>
@@ -26,13 +26,13 @@
             </a>
         </nav>
         <div class="content">
-            <cmoponent :is="currentView"></cmoponent>
+            <component :is="currentView"></component>
         </div>
     </div>
 </template>
 
 <script>
-    import Home from './components/Home'
+    import Home from 'src/components/Home'
 
     export default {
         components: {
@@ -48,13 +48,13 @@
         ready () {
             console.log('Im ready!')
             $.init()
-        },
+        }
 
     }
 </script>
 
 <style>
     .infinite-scroll-preloader {
-        margin-top:-20px;
+        margin-top: -20px;
     }
 </style>

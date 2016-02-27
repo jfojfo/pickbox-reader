@@ -32,7 +32,16 @@ config.plugins = (config.plugins || []).concat([
   // https://github.com/ampedandwired/html-webpack-plugin
   new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: 'src/index.html',
+    template: 'src/pages/app.html',
+    chunks: ['app', 'vendor', 'common'],
+    //excludeChunks: ['article'],
+    //hash: true,
+    inject: true
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'article.html',
+    template: 'src/pages/article.html',
+    chunks: ['article', 'vendor', 'common'],
     inject: true
   })
 ])

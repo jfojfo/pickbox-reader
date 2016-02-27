@@ -4,7 +4,8 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    app: './src/main.js',
+    app: './src/pages/app.js',
+    article: './src/pages/article.js',
     vendor: [
       'zepto',
       'vue',
@@ -82,7 +83,7 @@ module.exports = {
       Vue: 'vue'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: ['common', 'vendor'],
       minChunks: 2
     })
   ],

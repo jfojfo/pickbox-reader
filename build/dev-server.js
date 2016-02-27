@@ -22,6 +22,8 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
+app.use(require('morgan')('dev'))
+
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
 // serve webpack bundle output

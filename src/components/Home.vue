@@ -1,10 +1,12 @@
 <template>
 
     <div class="infinite-scroll infinite-scroll-bottom" data-distance="100">
-        <div class="list-block">
+        <div class="list-block home-list">
             <ul class="list-container">
 
-                <li v-for="article in articles" class="dis-box box-horizontal align-center article-item">
+                <div v-for="article in articles"
+                     @click="onArticleClick($index, article)"
+                     class="dis-box box-horizontal align-center article-item">
                     <div class="dis-box box-vertical flex">
                         <div class="article-title">{{ article.title }}</div>
                         <div class="article-info dis-box box-horizontal">
@@ -15,7 +17,7 @@
                     <div v-if="article.img" class="dis-box align-center article-img">
                         <img :src="article.img" width="66">
                     </div>
-                </li>
+                </div>
             </ul>
         </div>
         <!-- 加载提示符 -->
@@ -27,7 +29,7 @@
 </template>
 
 <style>
-    .list-block {
+    .home-list {
         margin-top: 0;
     }
 
@@ -63,11 +65,14 @@
     .article-img {
         padding-left: 0.4rem;
     }
+
+    .article-img img {
+    }
 </style>
 
 <script type="text/ecmascript-6">
     require('src/css/flexbox.css')
-    import API from './API_tuicool'
+    import API from './helper/API_tuicool'
 
     export default {
         data () {
@@ -80,10 +85,20 @@
 
         ready () {
             this.initInfinite()
-            this.fetchData()
+            if (this.articles.length === 0) {
+                this.fetchData()
+            }
         },
 
         methods: {
+
+            initInfinite () {
+                $(document).on('infinite', () => {
+                    console.log('infinite')
+                    this.fetchData()
+                })
+
+            },
 
             fetchData () {
                 if (!this.hasMore) {
@@ -93,7 +108,7 @@
                     return
                 }
                 this.loading = true
-                var size = 7
+                var size = 30
                 var page = this.articles.length / size
                 API.getArticleList(page, size).done((articles, hasMore) => {
                     this.hasMore = hasMore
@@ -102,17 +117,16 @@
                     if (!hasMore) {
                         $.detachInfiniteScroll($('.infinite-scroll'));
                     }
+
                 }).always(() => {
                     this.loading = false
                 })
             },
 
-            initInfinite () {
-                $(document).on('infinite', () => {
-                    console.log('infinite')
-                    this.fetchData()
-                })
-
+            onArticleClick (index, article) {
+                var id = article.id
+//                $.router.load('/article.html?id=' + id)
+                this.$dispatch('loadArticle', index, id)
             }
         }
     }

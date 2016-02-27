@@ -18,7 +18,9 @@
 
 </head>
 <body>
-<app></app>
+<div class="page-group">
+    <component v-for="(page, args) in pages" :is="page" :args="args"></component>
+</div>
 <!-- built files will be auto injected -->
 
 </body>
