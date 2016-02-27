@@ -125,7 +125,6 @@
 
             onArticleClick (index, article) {
                 var id = article.id
-//                $.router.load('/article.html?id=' + id)
                 this.$dispatch('loadArticle', index, id)
             }
         }

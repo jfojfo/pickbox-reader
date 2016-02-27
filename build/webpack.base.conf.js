@@ -5,7 +5,6 @@ var webpack = require('webpack')
 module.exports = {
   entry: {
     app: './src/pages/app.js',
-    article: './src/pages/article.js',
     vendor: [
       'zepto',
       'vue',

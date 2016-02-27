@@ -37,12 +37,6 @@ config.plugins = (config.plugins || []).concat([
     //excludeChunks: ['article'],
     //hash: true,
     inject: true
-  }),
-  new HtmlWebpackPlugin({
-    filename: 'article.html',
-    template: 'src/pages/article.html',
-    chunks: ['article', 'vendor', 'common'],
-    inject: true
   })
 ])
 
