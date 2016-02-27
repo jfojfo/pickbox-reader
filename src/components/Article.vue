@@ -8,7 +8,13 @@
             <h1 class="title">正文</h1>
         </header>
         <div v-if="article" class="content article-content">
-            {{{ article.content }}}
+            <h2>{{ article.title }}</h2>
+            <div class="article-info">
+                <span class="article-info-from">{{ article.feed_title }}</span>
+                <span class="article-info-time">{{ article.time }}</span>
+            </div>
+            <div>{{{ article.content }}}</div>
+            <a :href="article.url" class="button button-big button-round article-origin" external>原文链接</a>
         </div>
         <div v-else class="infinite-scroll-preloader article-loading">
             <div class="preloader"></div>
@@ -77,5 +83,18 @@
 
     .article-content img {
         max-width: 100%;
+    }
+
+    .article-info {
+        font-size: 0.8em;
+        color: grey;
+    }
+
+    .article-info-time {
+        margin-left: 1rem;
+    }
+
+    .article-origin {
+        margin: 1rem 0;
     }
 </style>

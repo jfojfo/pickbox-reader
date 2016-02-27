@@ -8,13 +8,13 @@
                      @click="onArticleClick($index, article)"
                      class="dis-box box-horizontal align-center article-item">
                     <div class="dis-box box-vertical flex">
-                        <div class="article-title">{{ article.title }}</div>
-                        <div class="article-info dis-box box-horizontal">
+                        <div class="article-item-title">{{ article.title }}</div>
+                        <div class="article-item-info dis-box box-horizontal">
                             <span class="flex">{{ article.feed_title }}</span>
                             <span>{{ article.rectime }}</span>
                         </div>
                     </div>
-                    <div v-if="article.img" class="dis-box align-center article-img">
+                    <div v-if="article.img" class="dis-box align-center article-item-img">
                         <img :src="article.img" width="66">
                     </div>
                 </div>
@@ -53,20 +53,20 @@
         transform-origin: 50% 0%;
     }
 
-    .article-title {
+    .article-item-title {
         color: black;
     }
 
-    .article-info {
+    .article-item-info {
         font-size: 0.618em;
         color: grey;
     }
 
-    .article-img {
+    .article-item-img {
         padding-left: 0.4rem;
     }
 
-    .article-img img {
+    .article-item-img img {
     }
 </style>
 
