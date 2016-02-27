@@ -54,7 +54,7 @@
 </script>
 
 <style>
-    .infinite-scroll-preloader {
-        margin-top: -20px;
+    .my-loading {
+        margin-top: 3rem;
     }
 </style>

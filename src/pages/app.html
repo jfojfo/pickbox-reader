@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="page-group">
-    <component v-for="(page, args) in pages" :is="page" :args="args"></component>
+    <component v-for="(page, args) in $data" :is="page" :args="args"></component>
 </div>
 <!-- built files will be auto injected -->
 

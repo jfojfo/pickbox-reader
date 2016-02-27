@@ -1,5 +1,5 @@
 <template>
-    <div class="page" id="{{ index | HtmlId }}">
+    <div class="page" id="{{ index | HtmlId 'article' }}">
         <header class="bar bar-nav">
             <a class="button button-link button-nav pull-left back" href="/" data-transition='slide-out'>
                 <span class="icon icon-left"></span>
@@ -14,9 +14,9 @@
                 <span class="article-info-time">{{ article.time }}</span>
             </div>
             <div>{{{ article.content }}}</div>
-            <a :href="article.url" class="button button-big button-round article-origin" external>原文链接</a>
+            <span @click="onOriginLinkClick" class="button button-big button-round article-origin">查看原文</span>
         </div>
-        <div v-else class="infinite-scroll-preloader article-loading">
+        <div v-else class="infinite-scroll-preloader my-loading">
             <div class="preloader"></div>
         </div>
     </div>
@@ -27,10 +27,6 @@
     import API from './helper/API_tuicool.js'
     import Helper from './helper/Helper.js'
 
-    Vue.filter('HtmlId', index => {
-        return Helper.genHtmlId(index, 'article')
-    })
-
     export default {
         components: {},
 
@@ -38,18 +34,23 @@
 
         data () {
             return {
-                index: this.args.index,
-                id: this.args.id,
                 article: this.args.article
+            }
+        },
+
+        computed: {
+            index () {
+                return this.args.index
+            },
+            id () {
+                return this.args.id
             }
         },
 
         ready () {
             console.log('Article!')
 
-            this.$watch('args', (newValue, oldValue) => {
-                this.index = this.args.index
-                this.id = this.args.id
+            this.$watch('args.article', (newValue, oldValue) => {
                 this.article = this.args.article
                 if (!this.article) {
                     this.fetchArticle(this.id)
@@ -62,10 +63,19 @@
         },
 
         methods: {
-            fetchArticle(id) {
+            fetchArticle (id) {
                 API.getArticle(id).done((article) => {
                     this.article = article
                 })
+            },
+
+            onOriginLinkClick () {
+                var url = this.article.url
+                if (url) {
+                    this.$dispatch('loadCustomPage', '原文', url, this.index)
+                } else {
+                    $.toast('原文链接丢失');
+                }
             }
         }
     }
@@ -75,10 +85,6 @@
 <style>
     .article-content {
         padding: 0 0.5rem;
-    }
-
-    .article-loading {
-        margin-top: 3rem;
     }
 
     .article-content img {
