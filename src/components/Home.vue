@@ -36,6 +36,7 @@
     .article-item {
         padding: 0.4rem;
         min-height: 2.2rem;
+        position: relative;
     }
 
     .article-item:before {
