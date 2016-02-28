@@ -52,13 +52,7 @@
         computed: {
             isHome () {
                 return this.currentView === 'home'
-            },
-
-//            category () {
-//                if (this.$refs.leftPanel)
-//                    return this.$refs.leftPanel.currentCatId
-//                return 0
-//            }
+            }
         },
 
         events: {

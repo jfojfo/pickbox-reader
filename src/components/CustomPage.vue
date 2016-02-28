@@ -48,6 +48,15 @@
         ready () {
             console.log('CustomPage!')
         },
+        attached () {
+            console.log('CustomPage attached')
+        },
+        detached () {
+            console.log('CustomPage detached')
+        },
+        destroyed () {
+            console.log('CustomPage destroyed')
+        },
         methods: {
             onContentLoaded () {
                 console.log('iframe loaded')

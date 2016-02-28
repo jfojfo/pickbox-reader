@@ -21,7 +21,7 @@
             </ul>
         </div>
         <!-- 加载提示符 -->
-        <div v-show="loading" class="infinite-scroll-preloader">
+        <div v-show="loading" class="infinite-scroll-preloader offset-loading">
             <div class="preloader"></div>
         </div>
     </div>
@@ -75,11 +75,17 @@
 
     .article-item-img img {
     }
+
+    .offset-loading {
+        margin-top:-20px;
+    }
 </style>
 
 <script type="text/ecmascript-6">
     require('src/css/flexbox.css')
     import API from './helper/API_tuicool'
+
+    var currSeq = 0
 
     export default {
         props: ['category'],
@@ -93,7 +99,10 @@
         },
 
         ready () {
+            console.log('Home!')
+
             this.initInfinite()
+            $.attachInfiniteScroll($('.infinite-scroll'))
             if (this.articles.length === 0) {
                 this.fetchData()
             }
@@ -128,15 +137,25 @@
                 var page = this.articles.length / size
                 var cat = this.category
 
+                var seq = ++currSeq
+
                 API.getArticleList(cat, page, size).done((articles, hasMore) => {
+                    if (seq !== currSeq) {
+                        console.log(`out of sequence of ${currSeq}: ${seq}`)
+                        return
+                    }
                     this.hasMore = hasMore
                     this.articles.push.apply(this.articles, articles)
 
                     if (!hasMore) {
+                        console.log('detach infinite scroll')
                         $.detachInfiniteScroll($('.infinite-scroll'));
                     }
 
                 }).always(() => {
+                    if (seq !== currSeq) {
+                        return
+                    }
                     this.loading = false
                 })
             },

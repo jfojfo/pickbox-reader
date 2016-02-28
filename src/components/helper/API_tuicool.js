@@ -3,8 +3,10 @@ let URL_ARTICLES_HOT = URL_BASE + '/api/articles/hot.json'
 let URL_ARTICLE = URL_BASE + '/api/articles/%d.json'
 
 let COMMON_HEADERS = {
+    'Authorization': 'Basic MC4wLjAuMDp0dWljb29s',
     //'User-Agent': 'iOS/iphone6/2.15.0',
-    'Authorization': 'Basic MC4wLjAuMDp0dWljb29s'
+    //'Origin': '',
+    //'Referer': ''
 }
 
 export default class {
@@ -28,7 +30,7 @@ export default class {
                 pn: page,
                 size: size || 30,
                 cid: category,   // 技术：20，科技：101000000，创投：101040000，数码：101050000，设计：108000000，营销：114000000
-                lang: 0          // 0：中英文，1：中文，2：英文
+                lang: 1          // 0：中英文，1：中文，2：英文
             }
         }).done((data, textStatus, jqXHR) => {
             console.log(data)

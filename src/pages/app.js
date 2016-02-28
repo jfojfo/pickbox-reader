@@ -3,7 +3,7 @@ import App from 'src/components/App.vue'
 import API from 'src/components/helper/API_tuicool'
 import Helper from 'src/components/helper/Helper'
 
-Vue.config.debug = true
+//Vue.config.debug = true
 
 Vue.filter('HtmlId', (index, prefix) => {
     return Helper.genHtmlId(index, prefix)
