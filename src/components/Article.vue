@@ -24,7 +24,7 @@
 
 <script type="text/ecmascript-6">
     import Utils from './helper/Utils.js'
-    import API from './helper/API_tuicool.js'
+    import API from './helper/API_Proxy.js'
     import Helper from './helper/Helper.js'
 
     export default {

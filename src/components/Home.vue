@@ -83,7 +83,7 @@
 
 <script type="text/ecmascript-6">
     require('src/css/flexbox.css')
-    import API from './helper/API_tuicool'
+    import API from './helper/API_Proxy'
 
     var currSeq = 0
 
