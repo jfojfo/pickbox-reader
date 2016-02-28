@@ -25,11 +25,11 @@ export default class {
 
     static ajaxFail(defer, jqXHR, textStatus, errorThrown) {
         console.log(jqXHR)
-        var err = JSON.parse(jqXHR.responseText)
-        defer.reject({
-            code: err.code,
-            error: err.error
-        })
+        //var err = JSON.parse(jqXHR.responseText)
+        //defer.reject({
+        //    code: err.code,
+        //    error: err.error
+        //})
     }
 
     static getArticleList(category, page, size) {
@@ -49,11 +49,12 @@ export default class {
                     size: size || 30,
                     cid: category,   // 技术：20，科技：101000000，创投：101040000，数码：101050000，设计：108000000，营销：114000000
                     lang: 1          // 0：中英文，1：中文，2：英文
-                }
+                },
+                'return': 'simple'
             })
         }).done((data, textStatus, jqXHR) => {
             console.log(data)
-            data = data.result
+            data = data.result.data
             defer.resolve(data.articles, data.has_next)
 
         }).fail((jqXHR, textStatus, errorThrown) => {
@@ -78,11 +79,12 @@ export default class {
                 params: {
                     is_pad: 1,
                     need_image_meta: 1
-                }
+                },
+                'return': 'simple'
             })
         }).done((data, textStatus, jqXHR) => {
             console.log(data)
-            data = data.result
+            data = data.result.data
             defer.resolve(data.article)
 
         }).fail((jqXHR, textStatus, errorThrown) => {
@@ -91,4 +93,30 @@ export default class {
 
         return defer.promise()
     }
+
+    static fetchImgData(imgurl) {
+        var defer = $.Deferred()
+
+        $.ajax({
+            url: URL_PROXY,
+            type: 'POST',
+            headers: PROXY_HEADERS,
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify({
+                url: imgurl,
+                method: 'GET',
+                'return': ['headers', 'data', 'status']  // 'simple', or ['buffer', 'headers', 'status', 'text', 'data']
+            })
+        }).done((data, textStatus, jqXHR) => {
+            console.log(data)
+            data = data.result
+            defer.resolve(data)
+
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            this.ajaxFail(defer, jqXHR, textStatus, errorThrown)
+        })
+
+        return defer.promise()
+    }
+
 }

@@ -13,7 +13,7 @@
                 <span class="article-info-from">{{ article.feed_title }}</span>
                 <span class="article-info-time">{{ article.time }}</span>
             </div>
-            <div>{{{ article.content }}}</div>
+            <article-content :content="article.content"></article-content>
             <span @click="onOriginLinkClick" class="button button-big button-round article-origin">查看原文</span>
         </div>
         <div v-else class="infinite-scroll-preloader my-loading">
@@ -26,9 +26,12 @@
     import Utils from './helper/Utils.js'
     import API from './helper/API_Proxy.js'
     import Helper from './helper/Helper.js'
+    import ArticleContent from 'src/components/ArticleContent'
 
     export default {
-        components: {},
+        components: {
+            ArticleContent
+        },
 
         props: ['args'],
 
