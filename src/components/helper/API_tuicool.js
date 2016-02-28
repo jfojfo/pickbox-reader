@@ -18,16 +18,17 @@ export default class {
         })
     }
 
-    static getArticleList(page, size) {
+    static getArticleList(category, page, size) {
         var defer = $.Deferred()
 
         $.ajax({
             url: URL_ARTICLES_HOT,
             headers: COMMON_HEADERS,
             data: {
-                cid: 0,
                 pn: page,
-                size: size || 30
+                size: size || 30,
+                cid: category,   // 技术：20，科技：101000000，创投：101040000，数码：101050000，设计：108000000，营销：114000000
+                lang: 0          // 0：中英文，1：中文，2：英文
             }
         }).done((data, textStatus, jqXHR) => {
             console.log(data)

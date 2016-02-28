@@ -1,14 +1,11 @@
 <template>
     <div class="page" id="app">
         <header class="bar bar-nav">
-            <a class="button button-link button-nav pull-left" href="/" data-transition='slide-out'>
-                <span class="icon icon-left"></span>
-                返回
-            </a>
+            <a class="icon icon-menu pull-left open-panel" data-panel="#panel-left"></a>
             <h1 class="title">文章</h1>
         </header>
         <nav class="bar bar-tab">
-            <a class="tab-item active" href="#">
+            <a class="tab-item" :class="{ 'active': isHome }" href="#">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">首页</span>
             </a>
@@ -26,28 +23,55 @@
             </a>
         </nav>
         <div class="content">
-            <component :is="currentView"></component>
+            <template v-if="isHome">
+                <component :is="currentView" :category="category"></component>
+            </template>
         </div>
     </div>
+
+    <home-left-panel v-ref:left-panel></home-left-panel>
+
 </template>
 
 <script>
     import Home from 'src/components/Home'
+    import HomeLeftPanel from 'src/components/HomeLeftPanel'
 
     export default {
         components: {
-            Home
+            Home, HomeLeftPanel
         },
 
         data () {
             return {
-                currentView: 'home'
+                currentView: '',
+                category: 0
+            }
+        },
+
+        computed: {
+            isHome () {
+                return this.currentView === 'home'
+            },
+
+//            category () {
+//                if (this.$refs.leftPanel)
+//                    return this.$refs.leftPanel.currentCatId
+//                return 0
+//            }
+        },
+
+        events: {
+            categoryChanged (cat) {
+                this.category = cat
             }
         },
 
         ready () {
             console.log('Im ready!')
             $.init()
+
+            this.currentView = 'home'
         }
 
     }

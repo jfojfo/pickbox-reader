@@ -37,6 +37,12 @@
         padding: 0.4rem;
         min-height: 2.2rem;
         position: relative;
+        transition-duration: 300ms;
+    }
+
+    .article-item:active {
+        transition-duration: 0ms;
+        background-color: #d9d9d9;
     }
 
     .article-item:before {
@@ -76,6 +82,8 @@
     import API from './helper/API_tuicool'
 
     export default {
+        props: ['category'],
+
         data () {
             return {
                 articles: [],
@@ -89,6 +97,13 @@
             if (this.articles.length === 0) {
                 this.fetchData()
             }
+
+            this.$watch('category', (newValue, oldValue) => {
+                this.articles = []
+                this.loading = false
+                this.hasMore = true
+                this.fetchData()
+            })
         },
 
         methods: {
@@ -111,7 +126,9 @@
                 this.loading = true
                 var size = 30
                 var page = this.articles.length / size
-                API.getArticleList(page, size).done((articles, hasMore) => {
+                var cat = this.category
+
+                API.getArticleList(cat, page, size).done((articles, hasMore) => {
                     this.hasMore = hasMore
                     this.articles.push.apply(this.articles, articles)
 
