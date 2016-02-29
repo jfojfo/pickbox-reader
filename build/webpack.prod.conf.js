@@ -10,7 +10,7 @@ config.output.chunkFilename = '[id].[chunkhash].js'
 
 // whether to generate source map for production files.
 // disabling this can speed up the build.
-var SOURCE_MAP = true
+var SOURCE_MAP = false
 
 config.devtool = SOURCE_MAP ? 'source-map' : false
 
@@ -35,6 +35,16 @@ Object.keys(cssExtractLoaders).forEach(function (key) {
   config.vue.loaders[key] = cssExtractLoaders[key]
 })
 
+if (typeof(config.vue.loaders.js) === 'string' && config.vue.loaders.js.indexOf('babel') === 0) {
+  config.vue.loaders.js = 'strip-debug!' + config.vue.loaders.js
+}
+
+config.module.loaders.forEach(function (item) {
+  if (typeof(item.loader) === 'string' && item.loader.indexOf('babel') === 0) {
+    item.loader = 'strip-debug!' + item.loader
+  }
+})
+
 config.plugins = (config.plugins || []).concat([
   // http://vuejs.github.io/vue-loader/workflow/production.html
   new webpack.DefinePlugin({
@@ -57,7 +67,7 @@ config.plugins = (config.plugins || []).concat([
   // see https://github.com/ampedandwired/html-webpack-plugin
   new HtmlWebpackPlugin({
     filename: '../index.html',
-    template: 'src/index.html',
+    template: 'src/pages/app.html',
     inject: true,
     minify: {
       removeComments: true,
