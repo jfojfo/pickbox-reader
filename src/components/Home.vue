@@ -82,8 +82,8 @@
 </style>
 
 <script type="text/ecmascript-6">
-    require('src/css/flexbox.css')
-    import API from './helper/API_Proxy'
+    require('../css/flexbox.css')
+    import API from './../api/LeanCloud'
 
     var currSeq = 0
 

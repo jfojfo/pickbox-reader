@@ -34,8 +34,8 @@
 </template>
 
 <script>
-    import Home from 'src/components/Home'
-    import HomeLeftPanel from 'src/components/HomeLeftPanel'
+    import Home from './Home'
+    import HomeLeftPanel from './HomeLeftPanel'
 
     export default {
         components: {

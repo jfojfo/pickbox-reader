@@ -3,7 +3,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import API from './helper/API_Proxy'
+    import API from './../api/LeanCloud'
 
     export default{
         props: ['content'],

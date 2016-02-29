@@ -23,8 +23,10 @@ if (method === 'GET') {
 
 var fields = ['buffer', 'headers', 'status', 'text', 'data']
 var flag = params.return
+var isSimple = false
 if (typeof flag === 'string' && flag.toLowerCase() === 'simple') {
-    fields = ['status', 'data']
+    isSimple = true
+    fields = ['data']
 } else if (typeof flag === 'object' && flag.hasOwnProperty('length') && flag.length <= 5) {
     fields = flag
 }
@@ -37,7 +39,11 @@ options.success = function(httpResponse) {
             ret[k] = httpResponse[k]
         }
     }
-    response.success(ret)
+    if (isSimple) {
+        response.success(ret.data)
+    } else {
+        response.success(ret)
+    }
     // console.log(httpResponse.data)
 }
 

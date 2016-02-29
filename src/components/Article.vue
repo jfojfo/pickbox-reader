@@ -23,10 +23,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import Utils from './helper/Utils.js'
-    import API from './helper/API_Proxy.js'
+    import Utils from './../utils/Utils.js'
+    import API from './../api/LeanCloud.js'
     import Helper from './helper/Helper.js'
-    import ArticleContent from 'src/components/ArticleContent'
+    import ArticleContent from './ArticleContent'
 
     export default {
         components: {
