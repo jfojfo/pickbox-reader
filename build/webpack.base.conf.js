@@ -74,7 +74,8 @@ module.exports = {
   vue: {
     loaders: {
       js: 'babel',
-      css: ExtractTextPlugin.extract('vue-style', 'css!autoprefixer?browsers=last 2 version')
+      css: ExtractTextPlugin.extract('vue-style', 'css!autoprefixer?browsers=last 2 version'),
+      less: ExtractTextPlugin.extract('vue-style', 'css!autoprefixer?browsers=last 2 version!less')
     }
   },
   plugins: [

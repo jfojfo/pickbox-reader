@@ -85,14 +85,17 @@
 
 </script>
 
-<style>
+<style lang="less">
     .article-content {
         padding: 0 0.5rem;
+        & img {
+             max-width: 100%;
+        }
     }
 
-    .article-content img {
-        max-width: 100%;
-    }
+    /*.article-content img {*/
+        /*max-width: 100%;*/
+    /*}*/
 
     .article-info {
         font-size: 0.8em;
