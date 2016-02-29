@@ -1,6 +1,6 @@
 {
-  "name": "tuicool-h5",
-  "description": "tuicool h5",
+  "name": "pickbox-reader",
+  "description": "pickbox reader",
   "author": "jfo <jfojfo@gmail.com>",
   "private": true,
   "scripts": {
