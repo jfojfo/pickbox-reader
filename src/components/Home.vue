@@ -87,6 +87,17 @@
 
     var currSeq = 0
 
+    var safeIndex = (function () {
+        var lastIndex = 0
+        var indexMap = {}
+        return function (id) {
+            if (indexMap[id] === undefined) {
+                indexMap[id] = lastIndex++
+            }
+            return indexMap[id]
+        }
+    })()
+
     export default {
         props: ['category'],
 
@@ -162,7 +173,7 @@
 
             onArticleClick (index, article) {
                 var id = article.id
-                this.$dispatch('loadArticle', index, id)
+                this.$dispatch('loadArticle', safeIndex(id), id)
             }
         }
     }
