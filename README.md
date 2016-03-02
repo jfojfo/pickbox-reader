@@ -1,4 +1,4 @@
-# tuicool-h5
+# pickbox reader
 
 > A Vue.js project
 
