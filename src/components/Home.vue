@@ -145,12 +145,13 @@
                 }
                 this.loading = true
                 var size = 30
-                var page = this.articles.length / size
                 var cat = this.category
+                var page = parseInt((this.articles.length + size - 1) / size)
+                var lastId = this.articles.length > 0 ? this.articles[this.articles.length - 1].id : undefined
 
                 var seq = ++currSeq
 
-                API.getArticleList(cat, page, size).done((articles, hasMore) => {
+                API.getArticleList(cat, size, page, lastId).done((articles, hasMore) => {
                     if (seq !== currSeq) {
                         console.log(`out of sequence of ${currSeq}: ${seq}`)
                         return

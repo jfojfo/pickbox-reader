@@ -23,19 +23,26 @@ export default class {
         //})
     }
 
-    static getArticleList(category, page, size) {
+    static getArticleList(category, size, page, lastId) {
         var defer = $.Deferred()
+
+        var params = {
+            cid: category,  // 热点：0，技术：20，科技：101000000，创投：101040000，数码：101050000，设计：108000000，营销：114000000
+            size: size,
+            lang: 1         // 0：中英文，1：中文，2：英文
+        }
+        if (page !== undefined) {
+            params.pn = page
+        }
+        if (lastId !== undefined) {
+            params.last_id = lastId
+        }
 
         Proxy.request({
             url: URL_ARTICLES_HOT,
             method: 'GET',
             headers: COMMON_HEADERS,
-            params: {
-                pn: page,
-                size: size || 30,
-                cid: category,   // 热点：0，技术：20，科技：101000000，创投：101040000，数码：101050000，设计：108000000，营销：114000000
-                lang: 1          // 0：中英文，1：中文，2：英文
-            },
+            params: params,
             'return': 'simple'
         }).done((data, textStatus, jqXHR) => {
             console.log(data)
