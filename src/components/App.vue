@@ -22,11 +22,10 @@
                 <span class="tab-label">设置</span>
             </a>
         </nav>
-        <div class="content">
-            <template v-if="isHome">
-                <component :is="currentView" :category="category"></component>
-            </template>
-        </div>
+        <template v-if="isHome">
+            <component :is="currentView" :category="category"></component>
+        </template>
+        <!--<home :category="category"></home>-->
     </div>
 
     <home-left-panel v-ref:left-panel></home-left-panel>
@@ -44,7 +43,7 @@
 
         data () {
             return {
-                currentView: '',
+                currentView: 'home',
                 category: 0
             }
         },

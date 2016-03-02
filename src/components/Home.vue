@@ -1,6 +1,14 @@
 <template>
 
-    <div class="infinite-scroll infinite-scroll-bottom" data-distance="100">
+    <div class="content infinite-scroll infinite-scroll-bottom pull-to-refresh-content"
+         data-distance="100" data-ptr-distance="55">
+
+        <!-- 默认的下拉刷新层 -->
+        <div class="pull-to-refresh-layer">
+            <div class="preloader"></div>
+            <div class="pull-to-refresh-arrow"></div>
+        </div>
+
         <div class="list-block home-list">
             <ul class="list-container">
 
@@ -20,8 +28,9 @@
                 </div>
             </ul>
         </div>
+
         <!-- 加载提示符 -->
-        <div v-show="loading" class="infinite-scroll-preloader offset-loading">
+        <div v-show="loadingMore" class="infinite-scroll-preloader offset-loading">
             <div class="preloader"></div>
         </div>
     </div>
@@ -77,7 +86,7 @@
     }
 
     .offset-loading {
-        margin-top:-20px;
+        margin-top: -20px;
     }
 </style>
 
@@ -104,31 +113,35 @@
         data () {
             return {
                 articles: [],
-                loading: false,
-                hasMore: true
+                hasMore: true,
+                loadingMore: false,
+                refreshing: false
             }
         },
 
         ready () {
             console.log('Home!')
 
-            this.initInfinite()
-            $.attachInfiniteScroll($('.infinite-scroll'))
+            this.initLoading()
+//            $.attachInfiniteScroll($('.infinite-scroll'))
             if (this.articles.length === 0) {
                 this.fetchData()
             }
 
             this.$watch('category', (newValue, oldValue) => {
-                this.articles = []
-                this.loading = false
-                this.hasMore = true
+                this.reset()
                 this.fetchData()
             })
         },
 
         methods: {
 
-            initInfinite () {
+            initLoading () {
+                $(document).on('refresh', (e) => {
+                    console.log('refresh')
+                    this.refresh()
+                })
+
                 $(document).on('infinite', () => {
                     console.log('infinite')
                     this.fetchData()
@@ -136,21 +149,28 @@
 
             },
 
+            reset () {
+                this.articles = []
+                this.hasMore = true
+                this.loadingMore = false
+                this.refreshing = false
+            },
+
             fetchData () {
+                if (this.loadingMore || this.refreshing) {
+                    return
+                }
                 if (!this.hasMore) {
                     return
                 }
-                if (this.loading) {
-                    return
-                }
-                this.loading = true
+
+                this.loadingMore = true
                 var size = 30
                 var cat = this.category
                 var page = parseInt((this.articles.length + size - 1) / size)
                 var lastId = this.articles.length > 0 ? this.articles[this.articles.length - 1].id : undefined
 
                 var seq = ++currSeq
-
                 API.getArticleList(cat, size, page, lastId).done((articles, hasMore) => {
                     if (seq !== currSeq) {
                         console.log(`out of sequence of ${currSeq}: ${seq}`)
@@ -158,6 +178,11 @@
                     }
                     this.hasMore = hasMore
                     this.articles.push.apply(this.articles, articles)
+
+                    this.$nextTick(() => {
+                        // $('.content', this).scroller('refresh')
+                        $.refreshScroller();
+                    })
 
                     if (!hasMore) {
                         console.log('detach infinite scroll')
@@ -168,7 +193,46 @@
                     if (seq !== currSeq) {
                         return
                     }
-                    this.loading = false
+                    this.loadingMore = false
+                })
+            },
+
+            refresh () {
+                if (this.loadingMore || this.refreshing) {
+                    return
+                }
+
+                this.refreshing = true
+
+                var size = 30
+                var cat = this.category
+                var page = undefined
+                var lastId = undefined
+
+                var seq = ++currSeq
+                API.getArticleList(cat, size, page, lastId).done((articles, hasMore) => {
+                    if (seq !== currSeq) {
+                        console.log(`out of sequence of ${currSeq}: ${seq}`)
+                        return
+                    }
+                    this.hasMore = hasMore
+                    this.articles = articles
+
+                    this.$nextTick(() => {
+                        $.refreshScroller();
+                    })
+
+                    if (!hasMore) {
+                        console.log('detach infinite scroll')
+                        $.detachInfiniteScroll($('.infinite-scroll'));
+                    }
+
+                }).always(() => {
+                    if (seq !== currSeq) {
+                        return
+                    }
+                    $.pullToRefreshDone('.pull-to-refresh-content');
+                    this.refreshing = false
                 })
             },
 
