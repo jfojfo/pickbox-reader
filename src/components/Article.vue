@@ -7,7 +7,7 @@
             </a>
             <h1 class="title">正文</h1>
         </header>
-        <div v-if="article" class="content article-content">
+        <div v-if="article" class="content full-article">
             <h2>{{ article.title }}</h2>
             <div class="article-info">
                 <span class="article-info-from">{{ article.feed_title }}</span>
@@ -86,14 +86,14 @@
 </script>
 
 <style lang="less">
-    .article-content {
+    .full-article {
         padding: 0 0.5rem;
         & img {
              max-width: 100%;
         }
     }
 
-    /*.article-content img {*/
+    /*.full-article img {*/
         /*max-width: 100%;*/
     /*}*/
 

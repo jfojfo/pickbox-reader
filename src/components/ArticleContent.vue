@@ -1,6 +1,12 @@
 <template>
-    <div>{{{ content }}}</div>
+    <div class="article-content">{{{ content }}}</div>
 </template>
+
+<style>
+    .article-content {
+        text-align: justify;
+    }
+</style>
 
 <script type="text/ecmascript-6">
     import API from './../api/LeanCloud'
