@@ -2,7 +2,7 @@
     <div class="page" id="app">
         <header class="bar bar-nav">
             <a class="icon icon-menu pull-left open-panel" data-panel="#panel-left"></a>
-            <h1 class="title">文章</h1>
+            <h1 @click="onTitleClick" class="title">文章</h1>
         </header>
         <nav class="bar bar-tab">
             <a class="tab-item" :class="{ 'active': isHome }" href="#">
@@ -65,6 +65,13 @@
             $.init()
 
             this.currentView = 'home'
+        },
+
+        methods: {
+            onTitleClick () {
+                console.log('title click')
+                $('.content').scrollTop(0, 2000)
+            }
         }
 
     }
