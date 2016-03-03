@@ -88,6 +88,10 @@
     .offset-loading {
         margin-top: -20px;
     }
+
+    .toast-bottom {
+        top: 85%;
+    }
 </style>
 
 <script type="text/ecmascript-6">
@@ -176,6 +180,7 @@
                         console.log(`out of sequence of ${currSeq}: ${seq}`)
                         return
                     }
+                    articles = articles || []
                     this.hasMore = hasMore
                     this.articles.push.apply(this.articles, articles)
 
@@ -209,6 +214,8 @@
                 var page = undefined
                 var lastId = undefined
 
+                var firstArticle = this.articles.length > 0 ? this.articles[0] : undefined
+
                 var seq = ++currSeq
                 API.getArticleList(cat, size, page, lastId).done((articles, hasMore) => {
                     if (seq !== currSeq) {
@@ -216,6 +223,7 @@
                         return
                     }
                     this.hasMore = hasMore
+                    articles = articles || []
                     this.articles = articles
 
                     this.$nextTick(() => {
@@ -225,6 +233,21 @@
                     if (!hasMore) {
                         console.log('detach infinite scroll')
                         $.detachInfiniteScroll($('.infinite-scroll'));
+                    }
+
+                    if (firstArticle) {
+                        var lastId = firstArticle.id
+                        var count = 0
+                        for (var a of articles) {
+                            if (a.id === lastId) {
+                                break
+                            }
+                            count++
+                        }
+
+                        if (count > 0) {
+                            $.toast(`更新${count}条`, 1000, 'toast-bottom');
+                        }
                     }
 
                 }).always(() => {
