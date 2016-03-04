@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="page" :class="{'dark-themm': isDarkTheme}" id="app">
+    <div class="page" id="home">
         <header class="bar bar-nav">
             <a class="icon icon-menu pull-left open-panel" data-panel="#panel-left"></a>
             <h1 @click="onTitleClick" class="title">文章</h1>
@@ -47,8 +47,7 @@
         data () {
             return {
                 currentView: 'article-list',
-                category: 0,
-                isDarkTheme: false
+                category: 0
             }
         },
 
@@ -61,10 +60,6 @@
         events: {
             categoryChanged (cat) {
                 this.category = cat
-            },
-            'dark-theme': function (isDarkTheme) {
-                console.log('event dark-theme')
-                this.isDarkTheme = isDarkTheme
             }
         },
 
@@ -77,7 +72,7 @@
         methods: {
             onTitleClick () {
                 console.log('title click')
-                $('.content').scrollTop(0, 2000)
+                $('.content').scrollTop(0, 1000)
             }
         }
 

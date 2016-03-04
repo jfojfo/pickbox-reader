@@ -1,8 +1,7 @@
 <template>
-    <div class="page" :class="{'theme-dark': isDarkTheme}"
-         id="{{ index | HtmlId 'article' }}">
+    <div class="page" id="{{ htmlId }}">
         <header class="bar bar-nav">
-            <a class="button button-link button-nav pull-left back" href="/" data-transition='slide-out'>
+            <a class="button button-link button-nav pull-left back" href="#" data-transition='slide-out'>
                 <span class="icon icon-left"></span>
                 返回
             </a>
@@ -105,6 +104,9 @@
             },
             id () {
                 return this.args.id
+            },
+            htmlId () {
+                return this.args.htmlId
             },
             fontSize () {
                 console.log('computed')

@@ -1,5 +1,5 @@
 <template>
-    <div class="page-group">
+    <div class="page-group" :class="{'theme-dark': isDarkTheme}">
         <component v-for="(page, args) in $data.pages" :is="page" :args="args"></component>
     </div>
 </template>
@@ -36,11 +36,10 @@
                 this.$set('pages.' + component, args)
             },
             hasComponent (component) {
-                return this.$data.pages.hasOwnProperty(component)
+                return this.pages.hasOwnProperty(component)
             },
             removeComponent (component) {
-                this.$delete('pages.' + component)
-                delete this.pages[component]
+                Vue.delete(this.pages, component)
             }
         },
         events: {
@@ -51,11 +50,12 @@
                     var comID = 'PageArticle_' + index
                     Vue.component(comID, PageArticle)
 
+                    var htmlId = Helper.genHtmlId(index, 'article')
                     if (!this.hasComponent(comID)) {
-                        this.addComponent(comID, {index: index, id: id})
+                        this.addComponent(comID, {index: index, id: id, htmlId: htmlId})
                     }
                     this.$nextTick(() => {
-                        $.router.load('#' + Helper.genHtmlId(index, 'article'))
+                        $.router.load('#' + htmlId)
                     })
                 })
             },
@@ -71,13 +71,20 @@
                         this.removeComponent(lastCustomPageComID)
                     }
                     lastCustomPageComID = comID
-                    this.addComponent(comID, {title: title, url: url, index: index})
+                    var htmlId = Helper.genHtmlId(index, 'custom')
+                    this.addComponent(comID, {title: title, url: url, index: index, htmlId: htmlId})
 
                     this.$nextTick(() => {
-                        $.router.load('#' + Helper.genHtmlId(index, 'custom'))
+                        $.router.load('#' + htmlId)
                     })
                 })
+            },
+
+            'dark-theme': function (isDarkTheme) {
+                console.log('event dark-theme')
+                this.isDarkTheme = isDarkTheme
             }
+
         }
     }
 </script>
