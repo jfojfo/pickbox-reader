@@ -9,7 +9,7 @@
             <div class="pull-to-refresh-arrow"></div>
         </div>
 
-        <div class="list-block home-list">
+        <div class="list-block article-list">
             <ul class="list-container">
 
                 <div v-for="article in articles"
@@ -38,7 +38,7 @@
 </template>
 
 <style>
-    .home-list {
+    .article-list {
         margin-top: 0;
     }
 
@@ -124,8 +124,6 @@
         },
 
         ready () {
-            console.log('Home!')
-
             this.initLoading()
 //            $.attachInfiniteScroll($('.infinite-scroll'))
             if (this.articles.length === 0) {
@@ -261,7 +259,7 @@
 
             onArticleClick (index, article) {
                 var id = article.id
-                this.$dispatch('loadArticle', safeIndex(id), id)
+                this.$dispatch('loadArticlePage', safeIndex(id), id)
             }
         }
     }
