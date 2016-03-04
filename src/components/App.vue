@@ -32,7 +32,7 @@
             }
         },
         methods: {
-            addComponent (component, args) {
+            setComponent (component, args) {
                 this.$set('pages.' + component, args)
             },
             hasComponent (component) {
@@ -51,9 +51,7 @@
                     Vue.component(comID, PageArticle)
 
                     var htmlId = Helper.genHtmlId(index, 'article')
-                    if (!this.hasComponent(comID)) {
-                        this.addComponent(comID, {index: index, id: id, htmlId: htmlId})
-                    }
+                    this.setComponent(comID, {index: index, id: id, htmlId: htmlId})
                     this.$nextTick(() => {
                         $.router.load('#' + htmlId)
                     })
@@ -72,7 +70,7 @@
                     }
                     lastCustomPageComID = comID
                     var htmlId = Helper.genHtmlId(index, 'custom')
-                    this.addComponent(comID, {title: title, url: url, index: index, htmlId: htmlId})
+                    this.setComponent(comID, {title: title, url: url, index: index, htmlId: htmlId})
 
                     this.$nextTick(() => {
                         $.router.load('#' + htmlId)

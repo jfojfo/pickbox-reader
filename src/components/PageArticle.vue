@@ -138,6 +138,10 @@
                 }
             })
 
+            this.$watch('args.id', (newValue, oldValue) => {
+                this.fetchArticle(this.id)
+            })
+
             if (!this.article) {
                 this.fetchArticle(this.id)
             }
