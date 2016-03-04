@@ -1,6 +1,6 @@
 <template>
     <div class="page-group">
-        <component v-for="(page, args) in $data" :is="page" :args="args"></component>
+        <component v-for="(page, args) in $data.pages" :is="page" :args="args"></component>
     </div>
 </template>
 
@@ -25,18 +25,22 @@
         components : { PageHome },
         data: function () {
             return {
-                'page-home': ''
+                pages: {
+                    'page-home': '',
+                },
+                isDarkTheme: false
             }
         },
         methods: {
             addComponent (component, args) {
-                this.$set(component, args)
+                this.$set('pages.' + component, args)
             },
             hasComponent (component) {
-                return this.$data.hasOwnProperty(component)
+                return this.$data.pages.hasOwnProperty(component)
             },
             removeComponent (component) {
-                this.$delete(component)
+                this.$delete('pages.' + component)
+                delete this.pages[component]
             }
         },
         events: {
