@@ -1,5 +1,5 @@
 <template>
-    <div class="page" id="app">
+    <div class="page" :class="{'dark-themm': isDarkTheme}" id="app">
         <header class="bar bar-nav">
             <a class="icon icon-menu pull-left open-panel" data-panel="#panel-left"></a>
             <h1 @click="onTitleClick" class="title">文章</h1>
@@ -44,7 +44,8 @@
         data () {
             return {
                 currentView: 'home',
-                category: 0
+                category: 0,
+                isDarkTheme: false
             }
         },
 
@@ -57,6 +58,10 @@
         events: {
             categoryChanged (cat) {
                 this.category = cat
+            },
+            'dark-theme': function (isDarkTheme) {
+                console.log('event dark-theme')
+                this.isDarkTheme = isDarkTheme
             }
         },
 

@@ -1,10 +1,12 @@
 <template>
-    <div class="page" id="{{ index | HtmlId 'article' }}">
+    <div class="page" :class="{'theme-dark': isDarkTheme}"
+         id="{{ index | HtmlId 'article' }}">
         <header class="bar bar-nav">
             <a class="button button-link button-nav pull-left back" href="/" data-transition='slide-out'>
                 <span class="icon icon-left"></span>
                 返回
             </a>
+            <a @click="onMoreClick" class="icon icon2 icon2-more pull-right"></a>
             <h1 class="title">正文</h1>
         </header>
         <div v-if="article" class="content full-article">
@@ -19,14 +21,64 @@
         <div v-else class="infinite-scroll-preloader my-loading">
             <div class="preloader"></div>
         </div>
+
+
+
+        <div class="popup-settings actions-modal" :class="[showSettings ? 'modal-in' : 'modal-out']">
+
+            <div class="list-block">
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">字体大小</div>
+
+                        <div class="item-after buttons-row">
+                            <label class="label-checkbox button" :class="{'active': fontSelect == -2}">
+                                <input type="radio" name="my-radio" value="-2" v-model="fontSelect">
+                                <span>较小</span>
+                            </label>
+                            <label class="label-checkbox button" :class="{'active': fontSelect == 0}">
+                                <input type="radio" name="my-radio" value="0" v-model="fontSelect">
+                                <span>中等</span>
+                            </label>
+                            <label class="label-checkbox button" :class="{'active': fontSelect == 2}">
+                                <input type="radio" name="my-radio" value="2" v-model="fontSelect">
+                                <span>较大</span>
+                            </label>
+                            <label class="label-checkbox button" :class="{'active': fontSelect == 4}">
+                                <input type="radio" name="my-radio" value="4" v-model="fontSelect">
+                                <span>最大</span>
+                            </label>
+                        </div>
+
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">夜间模式</div>
+                        <div class="item-after">
+                            <label class="label-switch">
+                                <input type="checkbox" v-model="isDarkTheme">
+                                <div class="checkbox"></div>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </div>
+        <div @click="onClosePopup" class="modal-overlay" :class="{'modal-overlay-visible': showSettings}"></div>
+
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    require('../css/ratchicons.less')
+
     import Utils from './../utils/Utils.js'
     import API from './../api/LeanCloud.js'
     import Helper from './helper/Helper.js'
     import ArticleContent from './ArticleContent'
+
+    var storage = window.localStorage
 
     export default {
         components: {
@@ -36,8 +88,14 @@
         props: ['args'],
 
         data () {
+            var isDT = storage.getItem('isDarkTheme')
+            var fs = storage.getItem('fontSelect')
             return {
-                article: this.args.article
+                article: this.args.article,
+                showSettings: false,
+                isDarkTheme: isDT != null && isDT != '0',
+                fontBase: 0,
+                fontSelect: fs == null ? '0' : fs
             }
         },
 
@@ -47,11 +105,31 @@
             },
             id () {
                 return this.args.id
+            },
+            fontSize () {
+                console.log('computed')
+                return (this.fontBase + parseFloat(this.fontSelect)) + 'px'
             }
         },
 
         ready () {
             console.log('Article!')
+
+            this.fontBase = parseFloat($(this.$el).css('font-size')) || 20
+            console.log('fontBase:' + this.fontBase)
+            $(this.$el).css('font-size', this.fontSize)
+
+            this.$watch('isDarkTheme', (newValue, oldValue) => {
+                console.log(this.isDarkTheme)
+                storage.setItem('isDarkTheme', this.isDarkTheme ? '1' : '0')
+                this.$dispatch('dark-theme', this.isDarkTheme)
+            })
+
+            this.$watch('fontSelect', (newValue, oldValue) => {
+                console.log(this.fontSelect)
+                storage.setItem('fontSelect', this.fontSelect)
+                $(this.$el).css('font-size', this.fontSize)
+            })
 
             this.$watch('args.article', (newValue, oldValue) => {
                 this.article = this.args.article
@@ -79,6 +157,14 @@
                 } else {
                     $.toast('原文链接丢失');
                 }
+            },
+
+            onMoreClick () {
+                this.showSettings = true
+            },
+
+            onClosePopup () {
+                this.showSettings = false
             }
         }
     }
@@ -107,6 +193,18 @@
     }
 
     .article-origin {
+        margin: 1rem 0;
+    }
+
+    .popup-settings {
+        background-color: white;
+    }
+
+    .popup-settings .content-block {
+        /*bottom: 0;*/
+    }
+
+    .popup-settings .list-block {
         margin: 1rem 0;
     }
 </style>

@@ -54,6 +54,11 @@ module.exports = {
         exclude: /node_modules/
       },
       {
+        test: /\.less$/,
+        //loader: 'style!css!less'
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader')
+      },
+      {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css!autoprefixer?browsers=last 2 version')
       },
@@ -62,7 +67,14 @@ module.exports = {
         loader: 'json'
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(svg|ttf|eot|woff(2)?)(\?[a-z0-9\-#]+)?$/,
+        loader : 'file-loader',
+        query: {
+          name: '[name].[ext]?[hash:7]'
+        }
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
         loader: 'url',
         query: {
           limit: 10000,
