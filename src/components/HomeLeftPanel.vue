@@ -41,11 +41,10 @@
 </style>
 
 <script type="text/ecmascript-6">
-    var storage = window.localStorage
+    import Store from './Store.js'
 
     export default{
         data() {
-            var isDT = storage.getItem('isDarkTheme')
             return {
                 cats: {
                     '热门': 0,
@@ -56,21 +55,21 @@
                     '数码': 101050000,
                     '营销': 114000000
                 },
-                currentCat: '热门',
-                isDarkTheme: isDT != null && isDT != '0',
+                currentCat: '热门'
             }
         },
         computed: {
             currentCatId () {
                 return this.cats[this.currentCat]
+            },
+            isDarkTheme: {
+                get() {
+                    return Store.isDarkTheme
+                },
+                set(v) {
+                    Store.isDarkTheme = v
+                }
             }
-        },
-        ready () {
-            this.$watch('isDarkTheme', (newValue, oldValue) => {
-                console.log(this.isDarkTheme)
-                storage.setItem('isDarkTheme', this.isDarkTheme ? '1' : '0')
-                this.$dispatch('dark-theme', this.isDarkTheme)
-            })
         },
         methods: {
             isCat (cat) {

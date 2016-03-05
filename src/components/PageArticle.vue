@@ -75,9 +75,9 @@
     import Utils from './../utils/Utils.js'
     import API from './../api/LeanCloud.js'
     import Helper from './helper/Helper.js'
-    import ArticleContent from './Article'
+    import ArticleContent from './Article.vue'
+    import Store from './Store.js'
 
-    var storage = window.localStorage
 
     export default {
         components: {
@@ -87,14 +87,10 @@
         props: ['args'],
 
         data () {
-            var fs = storage.getItem('fontSelect')
-            var isDT = storage.getItem('isDarkTheme')
             return {
                 article: this.args.article,
                 showSettings: false,
                 fontBase: 0,
-                fontSelect: fs == null ? '0' : fs,
-                isDarkTheme: isDT != null && isDT != '0',
             }
         },
 
@@ -109,8 +105,23 @@
                 return this.args.htmlId
             },
             fontSize () {
-                console.log('computed')
                 return (this.fontBase + parseFloat(this.fontSelect)) + 'px'
+            },
+            isDarkTheme: {
+                get() {
+                    return Store.isDarkTheme
+                },
+                set(v) {
+                    Store.isDarkTheme = v
+                }
+            },
+            fontSelect: {
+                get() {
+                    return Store.fontSelect
+                },
+                set(v) {
+                    Store.fontSelect = v
+                }
             }
         },
 
@@ -119,15 +130,7 @@
             console.log('fontBase:' + this.fontBase)
             $(this.$el).css('font-size', this.fontSize)
 
-            this.$watch('isDarkTheme', (newValue, oldValue) => {
-                console.log(this.isDarkTheme)
-                storage.setItem('isDarkTheme', this.isDarkTheme ? '1' : '0')
-                this.$dispatch('dark-theme', this.isDarkTheme)
-            })
-
             this.$watch('fontSelect', (newValue, oldValue) => {
-                console.log(this.fontSelect)
-                storage.setItem('fontSelect', this.fontSelect)
                 $(this.$el).css('font-size', this.fontSize)
             })
 

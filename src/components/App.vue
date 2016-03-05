@@ -13,6 +13,7 @@
 <script type="text/ecmascript-6">
     import Helper from './helper/Helper.js'
     import PageHome from './PageHome.vue'
+    import Store from './Store.js'
 
 
     Vue.filter('HtmlId', (index, prefix) => {
@@ -20,17 +21,19 @@
     })
 
     var lastCustomPageComID;
-    var storage = window.localStorage
 
     export default{
         components : { PageHome },
         data: function () {
-            var isDT = storage.getItem('isDarkTheme')
             return {
                 pages: {
                     'page-home': '',
-                },
-                isDarkTheme: isDT != null && isDT != '0',
+                }
+            }
+        },
+        computed: {
+            isDarkTheme () {
+                return Store.isDarkTheme
             }
         },
         methods: {
@@ -78,13 +81,7 @@
                         $.router.load('#' + htmlId)
                     })
                 })
-            },
-
-            'dark-theme': function (isDarkTheme) {
-                console.log('event dark-theme')
-                this.isDarkTheme = isDarkTheme
             }
-
         }
     }
 </script>
