@@ -20,15 +20,17 @@
     })
 
     var lastCustomPageComID;
+    var storage = window.localStorage
 
     export default{
         components : { PageHome },
         data: function () {
+            var isDT = storage.getItem('isDarkTheme')
             return {
                 pages: {
                     'page-home': '',
                 },
-                isDarkTheme: false
+                isDarkTheme: isDT != null && isDT != '0',
             }
         },
         methods: {

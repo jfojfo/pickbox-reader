@@ -87,14 +87,14 @@
         props: ['args'],
 
         data () {
-            var isDT = storage.getItem('isDarkTheme')
             var fs = storage.getItem('fontSelect')
+            var isDT = storage.getItem('isDarkTheme')
             return {
                 article: this.args.article,
                 showSettings: false,
-                isDarkTheme: isDT != null && isDT != '0',
                 fontBase: 0,
-                fontSelect: fs == null ? '0' : fs
+                fontSelect: fs == null ? '0' : fs,
+                isDarkTheme: isDT != null && isDT != '0',
             }
         },
 
@@ -176,9 +176,11 @@
 </script>
 
 <style lang="less">
+    @import "../css/theme-dark.less";
+
     .full-article {
         padding: 0 0.5rem;
-        & img {
+        img {
              max-width: 100%;
         }
     }
