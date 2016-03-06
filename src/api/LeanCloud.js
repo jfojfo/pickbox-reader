@@ -1,4 +1,6 @@
 import Proxy from './Proxy.js'
+import Config from '../Config.js'
+import Constraint from '../Constraint.js'
 
 
 let URL_BASE = 'http://api.tuicool.com'
@@ -46,6 +48,12 @@ export default class {
             'return': 'simple'
         }).done((data, textStatus, jqXHR) => {
             console.log(data)
+
+            try {
+                data = new Constraint(Config.api_article_list).check(data)
+            } catch (e) {
+                console.warn(e)
+            }
             defer.resolve(data.articles, data.has_next)
 
         }).fail((jqXHR, textStatus, errorThrown) => {
@@ -69,6 +77,11 @@ export default class {
             'return': 'simple'
         }).done((data, textStatus, jqXHR) => {
             console.log(data)
+            try {
+                data = new Constraint(Config.api_article).check(data)
+            } catch (e) {
+                console.warn(e)
+            }
             defer.resolve(data.article)
 
         }).fail((jqXHR, textStatus, errorThrown) => {
