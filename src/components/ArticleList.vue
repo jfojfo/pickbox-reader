@@ -259,7 +259,7 @@
 
             onArticleClick (index, article) {
                 var id = article.id
-                this.$dispatch('loadArticlePage', safeIndex(id), id)
+                this.$dispatch('loadArticlePage', index, id)
             }
         }
     }

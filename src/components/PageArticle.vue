@@ -166,7 +166,7 @@
             onOriginLinkClick () {
                 var url = this.article.url
                 if (url) {
-                    this.$dispatch('loadCustomPage', '原文', url, this.index)
+                    this.$dispatch('loadCustomPage', '原文', url, this.index, this.id)
                 } else {
                     $.toast('原文链接丢失');
                 }
