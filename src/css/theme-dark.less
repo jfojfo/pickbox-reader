@@ -23,12 +23,20 @@
     color: #bbbbbb;
   }
 
+  .article-item:active {
+    background-color: @activeLink;
+  }
+
   .article-item:before {
     background-color: @dividerBg;
   }
 
   .popup-settings {
     background-color: @pageBg;
+  }
+
+  .ctl-group i {
+    background-color: lighten(@pageBg, 20%);
   }
 
 }

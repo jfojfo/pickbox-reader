@@ -186,7 +186,6 @@
 
             onScroll (e) {
                 var curr = e.currentTarget.scrollTop
-                console.log(curr, this.lastScrollTop)
                 if (this.lastScrollTop !== undefined) {
                     this.hideCtlPanel = (curr - this.lastScrollTop > 0)
                 }
@@ -238,10 +237,14 @@
     }
 
     .ctl-group {
-        background-color: transparent;
+        background-color: transparent !important;
         left: auto;
         margin-bottom: 1rem;
         margin-right: 0.5rem;
+    }
+
+    .ctl-group:before {
+        display: none;
     }
 
     .ctl-group-fade-transition {
