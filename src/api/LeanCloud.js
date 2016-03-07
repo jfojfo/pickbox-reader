@@ -52,7 +52,7 @@ export default class {
             try {
                 data = new Constraint(Config.api_article_list).check(data)
             } catch (e) {
-                console.warn(e)
+                console.warn('' + e)
             }
             defer.resolve(data.articles, data.has_next)
 
@@ -80,7 +80,7 @@ export default class {
             try {
                 data = new Constraint(Config.api_article).check(data)
             } catch (e) {
-                console.warn(e)
+                console.warn('' + e)
             }
             defer.resolve(data.article)
 

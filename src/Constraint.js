@@ -26,33 +26,6 @@
 
 var slice = Array.prototype.slice
 
-class Rule {
-    constructor(name, f) {
-        if (typeof(name) === 'function') {
-            this.name = ''
-            this.f = name
-            this.args = slice.call(arguments, 1)
-        } else {
-            this.name = name
-            this.f = f
-            this.args = slice.call(arguments, 2)
-        }
-    }
-
-    fn(v) {
-        var arr = [v].concat(this.args)
-        return this.f.apply(this, arr)
-    }
-
-    toString() {
-        var s = this.args.join(',')
-        if (s.length === 0) {
-            return `(${this.name})`
-        } else {
-            return `(${this.name} ${s})`
-        }
-    }
-}
 
 class Constraint {
 
@@ -65,7 +38,7 @@ class Constraint {
             if (this.options.hasOwnProperty('defValue')) {
                 return this.options.defValue
             } else {
-                throw '(${value}) undefined'
+                throw new CTValueUndefined(value)//'(${value}) undefined'
             }
         }
         return value
@@ -73,7 +46,7 @@ class Constraint {
 
     checkNull(value) {
         if (value === null && this.options.nullable !== true) {
-            throw `(${value}) null not allowed`
+            throw new CTValueNull(value)//`(${value}) null not allowed`
         }
         return value
     }
@@ -95,13 +68,13 @@ class Constraint {
             return value
         }
 
-        throw `(${value}) type error, should be of type "${this.options.type}"`
+        throw new CTValueType(value, this.options.type)//`(${value}) type error, should be of type "${this.options.type}"`
     }
 
     checkRule(value) {
         if (this.options.hasOwnProperty('value')) {
             if (value !== this.options.value) {
-                throw `(${value}) value violate ${this.options.value}`
+                throw new CTValueViolate(value, this.options.value)//`(${value}) value violate ${this.options.value}`
             }
         }
 
@@ -112,16 +85,16 @@ class Constraint {
         var rule = this.options.rule
 
         if (typeof(rule) === 'function') {
-            throw `(${value}) rule violate`
+            throw new CTValueRuleViolate(value, rule)//`(${value}) rule violate`
         } else if (rule instanceof Rule) {
             if (!rule.fn(value)) {
-                throw `(${value}) rule violate "${rule.toString()}"`
+                throw new CTValueRuleViolate(value, rule)//`(${value}) rule violate "${rule.toString()}"`
             } else {
                 return value
             }
         }
 
-        throw `constraint rule config error "${rule}"`
+        throw new CTException(`rule config error "${rule}"`)
     }
 
     check(value) {
@@ -138,17 +111,18 @@ class Constraint {
                     try {
                         value[key] = new Constraint(opt.constraint[key]).check(value[key])
                     } catch (e) {
-                        var msg = '' + e
-                        if (msg.indexOf(':') === -1) {
-                            msg = key + ': ' + msg
-                        } else {
-                            if (opt.constraint[key].type === Constraint.TYPE_ARRAY) {
-                                msg = key + msg
-                            } else {
-                                msg = key + '.' + msg
-                            }
-                        }
-                        throw msg
+                        throw new CTPathException(opt, key, e)
+                        //var msg = '' + e
+                        //if (msg.indexOf(':') === -1) {
+                        //    msg = key + ': ' + msg
+                        //} else {
+                        //    if (opt.constraint[key].type === Constraint.TYPE_ARRAY) {
+                        //        msg = key + msg
+                        //    } else {
+                        //        msg = key + '.' + msg
+                        //    }
+                        //}
+                        //throw msg
                     }
                 }
             }
@@ -157,14 +131,15 @@ class Constraint {
                 try {
                     value[i] = new Constraint(opt.constraint).check(value[i])
                 } catch (e) {
-                    var msg = '' + e
-                    var key = `[${i}]`
-                    if (msg.indexOf(':') === -1) {
-                        msg = key + ': ' + msg
-                    } else {
-                        msg = key + '.' + msg
-                    }
-                    throw msg
+                    throw new CTPathException(opt, i, e)
+                    //var msg = '' + e
+                    //var key = `[${i}]`
+                    //if (msg.indexOf(':') === -1) {
+                    //    msg = key + ': ' + msg
+                    //} else {
+                    //    msg = key + '.' + msg
+                    //}
+                    //throw msg
                 }
             }
         }
@@ -172,6 +147,46 @@ class Constraint {
         return value
     }
 
+}
+
+
+function str(value) {
+    if (typeof(value) === 'string') {
+        return `"${value}"`
+    } else {
+        return `${value}`
+    }
+}
+
+class Rule {
+    constructor(name, f) {
+        if (typeof(name) === 'function') {
+            this.name = ''
+            this.f = name
+            this.args = slice.call(arguments, 1)
+        } else {
+            this.name = name
+            this.f = f
+            this.args = slice.call(arguments, 2)
+        }
+    }
+
+    fn(v) {
+        var arr = [v].concat(this.args)
+        return this.f.apply(this, arr)
+    }
+
+    toString() {
+        var args = this.args.map((arg) => {
+            return str(arg)
+        })
+        var s = args.join(',')
+        if (s.length === 0) {
+            return `(${this.name})`
+        } else {
+            return `(${this.name} ${s})`
+        }
+    }
 }
 
 Constraint.not = function (rule) {
@@ -194,7 +209,7 @@ Constraint.or = function (rule1, rule2) {
 
 Constraint.empty = new Rule('empty', function (value) {
     if (value === null || value === undefined) {
-        throw `bad value "${value}"`
+        throw new CTRuleArgsExcption(this, value)//`bad value "${value}"`
     }
 
     var type = typeof(value)
@@ -225,18 +240,27 @@ Constraint.notEmpty = Constraint.not(Constraint.empty)
 
 Constraint.eq = function (other) {
     return new Rule('eq', function (v, o) {
+        if (typeof(v) !== typeof(o)) {
+            throw new CTRuleArgsExcption(this, v, o)
+        }
         return v === o
     }, other)
 }
 
 Constraint.gt = function (other) {
     return new Rule('gt', function (v, o) {
+        if (typeof(v) !== typeof(o)) {
+            throw new CTRuleArgsExcption(this, v, o)
+        }
         return v > o
     }, other)
 }
 
 Constraint.lt = function (other) {
     return new Rule('lt', function (v, o) {
+        if (typeof(v) !== typeof(o)) {
+            throw new CTRuleArgsExcption(this, v, o)
+        }
         return v < o
     }, other)
 }
@@ -246,5 +270,97 @@ Constraint.TYPE_STRING = 'string'
 Constraint.TYPE_NUMBER = 'number'
 Constraint.TYPE_OBJECT = 'object'
 Constraint.TYPE_ARRAY = 'array'
+
+
+class CTException {
+    constructor(desc) {
+        this.desc = desc || ''
+    }
+
+    toString() {
+        return '' + this.desc
+    }
+}
+
+class CTValueException extends CTException {
+    constructor(value, desc) {
+        super(desc)
+        this.value = value
+    }
+
+    toString() {
+        return `${str(this.value)}, ${this.desc}`
+    }
+}
+
+class CTValueUndefined extends CTValueException {
+    constructor(value) {
+        super(value, 'undefined not allowed, try setting "defValue"')
+    }
+}
+
+class CTValueNull extends CTValueException {
+    constructor(value) {
+        super(value, 'null not allowed, try setting "nullable: true"')
+    }
+}
+
+class CTValueType extends CTValueException {
+    constructor(value, type) {
+        super(value, `type error should be of type "${type}"`)
+        this.type = type
+    }
+}
+
+class CTValueViolate extends CTValueException {
+    constructor(value, correctValue) {
+        super(value, `value violate:${str(correctValue)}`)
+        this.correctValue = correctValue
+    }
+}
+
+class CTValueRuleViolate extends CTValueException {
+    constructor(value, rule) {
+        super(value, `rule violate:${rule.toString()}`)
+        this.rule = rule
+    }
+}
+
+class CTRuleArgsExcption extends CTException {
+    constructor(rule) {
+        var args = slice.call(arguments, 1).map((arg) => {
+            return str(arg)
+        })
+        var msg = args.join(',')
+        super(`rule ${rule} bad arguments:(${msg})`)
+        this.rule = rule
+    }
+}
+
+class CTPathException extends CTException {
+    constructor(options, key, exception) {
+        var type = options.type
+        var constraint = options.constraint
+        var path = ''
+
+        if (!(exception instanceof CTPathException)) {
+            path = ':' + path
+        } else if (type === Constraint.TYPE_ARRAY ||
+            type === Constraint.TYPE_OBJECT && constraint[key].type !== Constraint.TYPE_ARRAY) {
+            path = '.' + path
+        }
+
+        if (type === Constraint.TYPE_ARRAY) {
+            key = '[' + key + ']'
+        }
+
+        path = key + path
+
+        super(path + exception.toString())
+        this.options = options
+        this.exception = exception
+    }
+}
+
 
 export default Constraint
