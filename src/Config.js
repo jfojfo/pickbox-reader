@@ -1,4 +1,4 @@
-import C from './Constraint.js'
+import C from './utils/Constraint.js'
 
 export default {
     api_article_list: {

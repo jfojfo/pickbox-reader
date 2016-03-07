@@ -1,6 +1,6 @@
 import Proxy from './Proxy.js'
 import Config from '../Config.js'
-import Constraint from '../Constraint.js'
+import Constraint from '../utils/Constraint.js'
 
 
 let URL_BASE = 'http://api.tuicool.com'
