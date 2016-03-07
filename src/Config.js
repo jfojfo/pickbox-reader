@@ -16,6 +16,12 @@ export default {
                 constraint: {
                     type: C.TYPE_OBJECT,
                     constraint: {
+                        test: {
+                            type: C.TYPE_OBJECT,
+                            nullable: true,
+                            defValue: null,
+                            rule: C.notEmpty
+                        },
                         id: {
                             type: C.TYPE_STRING,
                             rule: C.notEmpty

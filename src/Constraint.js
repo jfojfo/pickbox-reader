@@ -71,7 +71,18 @@ class Constraint {
         return value
     }
 
+    checkNull(value) {
+        if (value === null && this.options.nullable !== true) {
+            throw `(${value}) null not allowed`
+        }
+        return value
+    }
+
     checkType(value) {
+        if (value === null && this.options.nullable === true) {
+            return value
+        }
+
         if (this.options.type === Constraint.TYPE_ARRAY) {
             if (value instanceof Array) {
                 return value
@@ -115,30 +126,30 @@ class Constraint {
 
     check(value) {
         value = this.checkExist(value)
+        this.checkNull(value)
         this.checkType(value)
         this.checkRule(value)
 
         var opt = this.options
         var type = opt.type
         if (type === Constraint.TYPE_OBJECT) {
-            if (value === null) {
-                throw 'null'
-            }
-            for (var key in opt.constraint) {
-                try {
-                    value[key] = new Constraint(opt.constraint[key]).check(value[key])
-                } catch (e) {
-                    var msg = '' + e
-                    if (msg.indexOf(':') === -1) {
-                        msg = key + ': ' + msg
-                    } else {
-                        if (opt.constraint[key].type === Constraint.TYPE_ARRAY) {
-                            msg = key + msg
+            if (value !== null) {
+                for (var key in opt.constraint) {
+                    try {
+                        value[key] = new Constraint(opt.constraint[key]).check(value[key])
+                    } catch (e) {
+                        var msg = '' + e
+                        if (msg.indexOf(':') === -1) {
+                            msg = key + ': ' + msg
                         } else {
-                            msg = key + '.' + msg
+                            if (opt.constraint[key].type === Constraint.TYPE_ARRAY) {
+                                msg = key + msg
+                            } else {
+                                msg = key + '.' + msg
+                            }
                         }
+                        throw msg
                     }
-                    throw msg
                 }
             }
         } else if (type === Constraint.TYPE_ARRAY) {
