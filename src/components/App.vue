@@ -37,6 +37,9 @@
                 return Store.isDarkTheme
             }
         },
+        ready () {
+            $.init()
+        },
         methods: {
             setComponent (component, args) {
                 this.$set('pages.' + component, args)

@@ -64,8 +64,6 @@
         },
 
         ready () {
-            $.init()
-
             this.currentView = 'article-list'
         },
 
