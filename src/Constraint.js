@@ -134,6 +134,8 @@ class Constraint {
 function str(value) {
     if (typeof(value) === 'string') {
         return `"${value}"`
+    } else if (typeof(value) === 'function') {
+        return 'function ' + value.name
     } else {
         return `${value}`
     }
@@ -292,7 +294,11 @@ class CTValueViolate extends CTValueException {
 
 class CTValueRuleViolate extends CTValueException {
     constructor(value, rule) {
-        super(value, `rule violate:${rule.toString()}`)
+        var s = rule.toString()
+        if (typeof(rule) === 'function') {
+            s = 'function ' + rule.name
+        }
+        super(value, `rule violate:${s}`)
         this.rule = rule
     }
 }
