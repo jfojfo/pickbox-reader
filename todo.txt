@@ -1,7 +1,7 @@
 -fix: 首页列表按下颜色、文章页button背景颜色
 -nullable constraints
 -Constraints Exception统一处理
-直接打开url#article_id，首页#cat_id
+-直接打开url#article_id，首页#cat_id
 分离配置数据：category
 chunkhash变化问题
 scroll to top没有动画

@@ -1,5 +1,5 @@
 <template>
-    <div class="page" id="{{ htmlId }}">
+    <div class="page page-current" id="{{ htmlId }}">
         <header v-if="false" class="bar bar-nav">
             <a class="button button-link button-nav pull-left back" href="#" data-transition='slide-out'>
                 <span class="icon icon-left"></span>

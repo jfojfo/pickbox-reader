@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="page" id="home">
+    <div class="page page-current" id="home">
         <header class="bar bar-nav">
             <a class="icon icon-menu pull-left open-panel" data-panel="#panel-left"></a>
             <h1 @click="onTitleClick" class="title">文章</h1>
