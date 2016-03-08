@@ -42,20 +42,13 @@
 
 <script type="text/ecmascript-6">
     import Store from './Store.js'
+    import Config from '../Config.js'
 
     export default{
         data() {
             return {
-                cats: {
-                    '热门': 0,
-                    '技术': 20,
-                    '科技': 101000000,
-                    '设计': 108000000,
-                    '创投': 101040000,
-                    '数码': 101050000,
-                    '营销': 114000000
-                },
-                currentCat: '热门'
+                cats: Config.category,
+                currentCat: Config.defCategory
             }
         },
         computed: {
