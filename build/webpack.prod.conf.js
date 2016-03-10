@@ -69,6 +69,7 @@ config.plugins = (config.plugins || []).concat([
     filename: '../index.html',
     template: 'src/pages/app.html',
     inject: true,
+    //chunksSortMode: 'none',
     minify: {
       removeComments: true,
       collapseWhitespace: true,
