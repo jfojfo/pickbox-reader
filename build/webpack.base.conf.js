@@ -5,20 +5,25 @@ var webpack = require('webpack')
 module.exports = {
   entry: {
     app: './src/pages/app.js',
-    vendor: [
-      'zepto',
-      'vue',
-      'lib/static/sm.js',
-      'lib/static/sm-extend.js',
-      'lib/static/sm.css',
-      'lib/static/sm-extend.css'
-    ]
+    //vendor: [
+    //  'zepto',
+    //  'vue',
+    //  'lib/static/sm.js',
+    //  'lib/static/sm-extend.js',
+    //  'lib/static/sm.css',
+    //  'lib/static/sm-extend.css'
+    //],
+    vendor_zepto: ['zepto'],
+    vendor_sm: ['lib/static/sm.js', 'lib/static/sm-extend.js'],
+    vendor_sm_css: ['lib/static/sm.css', 'lib/static/sm-extend.css'],
+    vendor_vue: ['vue'],
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),
     publicPath: '/static/',
     filename: '[name].js'
   },
+  recordsPath: path.resolve(__dirname, "./webpack.records.json"),
   resolve: {
     extensions: ['', '.js', '.vue'],
     alias: {
@@ -49,7 +54,7 @@ module.exports = {
         loader: 'vue'
       },
       {
-        test: /\.js$/,
+        test: /src\/.*\.js$/,
         loader: 'babel?compact=false',
         exclude: /node_modules/
       },
@@ -95,8 +100,7 @@ module.exports = {
       Vue: 'vue'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['common', 'vendor'],
-      minChunks: 2
+      name: ['common', 'vendor_zepto', 'vendor_vue', 'vendor_sm', 'vendor_sm_css']
     })
   ],
   eslint: {
