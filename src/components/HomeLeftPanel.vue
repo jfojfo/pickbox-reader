@@ -1,6 +1,6 @@
 <template>
     <div class="panel-overlay"></div>
-    <div class="panel panel-left panel-reveal theme-dark" id='panel-left'>
+    <div class="panel panel-right panel-reveal theme-dark" id='panel-left'>
         <div class="list-block">
             <ul>
                 <li v-for="(cat, id) in cats" class="close-panel" @click="onCatClick(cat)">

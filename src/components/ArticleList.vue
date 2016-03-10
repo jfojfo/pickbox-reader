@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div v-if="article.img" class="dis-box align-center article-item-img">
-                        <img :src="article.img" width="66">
+                        <img :src="article.img">
                     </div>
                 </div>
             </ul>
@@ -83,6 +83,7 @@
     }
 
     .article-item-img img {
+        width: 5rem;
     }
 
     .offset-loading {

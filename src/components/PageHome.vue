@@ -2,10 +2,10 @@
 <div>
     <div class="page page-current" id="home">
         <header class="bar bar-nav">
-            <a class="icon icon-menu pull-left open-panel" data-panel="#panel-left"></a>
+            <a class="icon icon-menu pull-right open-panel" data-panel="#panel-left"></a>
             <h1 @click="onTitleClick" class="title">文章</h1>
         </header>
-        <nav class="bar bar-tab">
+        <nav v-if="false" class="bar bar-tab">
             <a class="tab-item" :class="{ 'active': isArticleList }" href="#">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">文章</span>
