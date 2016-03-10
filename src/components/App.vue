@@ -1,6 +1,6 @@
 <template>
     <div class="page-group" :class="{'theme-dark': isDarkTheme}">
-        <component v-for="(page, args) in $data.pages" :is="page" :args="args"></component>
+        <component v-for="(page, args) in pages" :is="page" :args="args"></component>
         <div v-if="isEmpty" class="page" id="{{ id_placeholder }}"></div>
     </div>
 </template>
@@ -21,16 +21,9 @@
         return Helper.genHtmlId(index, prefix)
     })
 
-    Vue.component('PageHome', (resolve, reject) => {
-        require.ensure(['./PageHome.vue'], function () {
-            resolve(require('./PageHome.vue'))
-        })
-    })
-
 
     var lastCustomPageComID;
     var appData = {
-        pages: {},
         id_placeholder: 'home'
     }
 
@@ -44,7 +37,10 @@
             }
         },
         data () {
-            return appData
+            return {
+                id_placeholder: appData.id_placeholder,
+                pages: {}
+            }
         },
         computed: {
             isDarkTheme () {
@@ -55,13 +51,15 @@
             }
         },
         ready () {
-            console.log('ready', 'isEmpty:' + this.isEmpty)
             $(() => {
-                console.log('$.init()', 'isEmpty:' + this.isEmpty)
-                $.init()
-
-                // after $.init() to make sure there is at least one page element exists in dom tree
-                this.route()
+                // sm.js通过$(function(){...})注册了一些初始化函数,用到了.page页面
+                // 这些初始化函数在dom产生ready事件时被调用
+                // 因此当component为空时,使用id为id_placeholder的.page页面,让sm.js正常初始化
+                // id_placeholder要与后续马上要加载的页面的id一致,否则进入子页面后back会找不到页面
+                this.route().done(() => {
+                    // route异步加载完真正page后,才调用$.init()初始化page
+                    this.$nextTick(() => $.init())
+                })
             })
         },
         methods: {
@@ -75,6 +73,8 @@
                 Vue.delete(this.pages, component)
             },
             route () {
+                var defer = $.Deferred()
+
                 var hash = window.location.hash
                 var parts = hash.split('_')
                 var page = parts[0]
@@ -86,7 +86,8 @@
 
                             require.ensure(['./PageArticle.vue'], (require) => {
                                 var PageArticle = require('./PageArticle.vue')
-                                this.regArticlePageComponent(PageArticle, -1, id)
+                                this.regArticlePageComponent(PageArticle, -1, id, true)
+                                defer.resolve()
                             })
 
                         } else if (page === '#custom') {
@@ -100,10 +101,17 @@
                         window.location.href = '/'
                     }
                 } else {
-                    this.setComponent('PageHome', {})
+                    require.ensure(['./PageHome.vue'], (require) => {
+                        var PageHome = require('./PageHome.vue')
+                        Vue.component('PageHome', PageHome)
+                        this.setComponent('PageHome', {})
+                        defer.resolve()
+                    })
                 }
+
+                return defer.promise()
             },
-            regArticlePageComponent (PageArticle, index, id) {
+            regArticlePageComponent (PageArticle, index, id, backToHome) {
                 var b58Id = bs58.encode(new Buffer(id))
 
                 //var comID = 'PageArticle_' + index
@@ -112,7 +120,7 @@
 
                 //var htmlId = Helper.genHtmlId(index, 'article')
                 var htmlId = Helper.genHtmlId(b58Id, 'article')
-                this.setComponent(comID, {index: index, id: id, htmlId: htmlId})
+                this.setComponent(comID, {index: index, id: id, htmlId: htmlId, backToHome: backToHome})
 
                 return htmlId
             },

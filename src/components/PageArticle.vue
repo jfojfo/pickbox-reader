@@ -1,7 +1,7 @@
 <template>
     <div class="page page-current" id="{{ htmlId }}">
         <header v-if="false" class="bar bar-nav">
-            <a class="button button-link button-nav pull-left back" href="#" data-transition='slide-out'>
+            <a @click="onBackClick" class="button button-link button-nav pull-left" href="#" data-transition='slide-out'>
                 <span class="icon icon-left"></span>
                 返回
             </a>
@@ -113,6 +113,9 @@
             fontSize () {
                 return (this.fontBase + parseFloat(this.fontSelect)) + 'px'
             },
+            backToHome () {
+                return this.args.backToHome === undefined ? false : this.args.backToHome
+            },
             isDarkTheme: {
                 get() {
                     return Store.isDarkTheme
@@ -173,7 +176,11 @@
             },
 
             onBackClick () {
-                $.router.back()
+                if (this.backToHome) {
+                    window.location.href = '/'
+                } else {
+                    $.router.back()
+                }
             },
 
             onMoreClick () {
