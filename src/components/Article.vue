@@ -5,7 +5,7 @@
 <style>
     .article-content {
         text-align: justify;
-        word-wrap: break-word;
+        word-break: break-all;
     }
 </style>
 
