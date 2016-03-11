@@ -22,7 +22,7 @@
     })
 
 
-    var lastCustomPageComID;
+    var lastCustomPageComID
     var appData = {
         id_placeholder: 'home'
     }
@@ -81,7 +81,7 @@
                 if (page) {
                     var b58Id = parts[1]
                     if (b58Id) {
-                        var id = new Buffer(bs58.decode(b58Id)).toString();
+                        var id = new Buffer(bs58.decode(b58Id)).toString()
                         if (page === '#article') {
 
                             require.ensure(['./PageArticle.vue'], (require) => {

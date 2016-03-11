@@ -1,3 +1,5 @@
+import bs58 from 'bs58'
+
 let APP_ID = 'ofk0Kl7wqrTUkHKKn5uPo6GS-gzGzoHsz'
 let APP_KEY = 'BvDz0V2KpbJlT5zPSankYQ9h'
 let HEADER_KEY_ID = 'x-avoscloud-application-id'
@@ -39,12 +41,15 @@ export default class {
     static request(params) {
         var defer = $.Deferred()
 
+        var _data = JSON.stringify(params)
+        var _data = bs58.encode(new Buffer(_data))
+
         $.ajax({
             url: URL_PROXY,
             type: 'POST',
             headers: PROXY_HEADERS,
             contentType: 'application/json; charset=UTF-8',
-            data: JSON.stringify(params)
+            data: JSON.stringify({req:_data})
         }).done((data, textStatus, jqXHR) => {
             defer.resolve(data.result, textStatus, jqXHR)
         }).fail(defer.reject)
