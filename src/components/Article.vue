@@ -30,7 +30,7 @@
 
                 API.fetchImgData(url).done((result) => {
                     var headers = result.headers
-                    var data = result.data.data
+                    var data = result.data
                     var contentType = headers['content-type'] || 'image/jpeg'
 
                     var arrayBufferView = new Uint8Array(data)
