@@ -9,6 +9,9 @@
             <h1 class="title">正文</h1>
         </header>
         <div v-if="article" @scroll="onScroll($event)" class="content full-article">
+            <div v-if="article.img" id="wx_icon" style="display: none">
+                <img :src="article.img">
+            </div>
             <h2>{{ article.title }}</h2>
             <div class="article-info">
                 <span class="article-info-from">{{ article.feed_title }}</span>
@@ -163,6 +166,7 @@
             fetchArticle (id) {
                 API.getArticle(id).done((article) => {
                     this.article = article
+                    document.title = article.title
                 })
             },
 
