@@ -1,6 +1,7 @@
-import Proxy from './Proxy.js'
+import Proxy from './ProxyV2.js'
 import Config from '../Config.js'
 import Constraint from '../utils/Constraint.js'
+import bs58 from 'bs58'
 
 
 let URL_BASE = 'http://api.tuicool.com'
@@ -107,6 +108,13 @@ export default class {
         })
 
         return defer.promise()
+    }
+
+    static pUrl(url) {
+        var params = {
+            url: url
+        }
+        return Proxy.URL + '?enc=' + bs58.encode(new Buffer(JSON.stringify(params)))
     }
 
 }

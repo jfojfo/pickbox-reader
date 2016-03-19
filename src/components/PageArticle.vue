@@ -9,8 +9,8 @@
             <h1 class="title">正文</h1>
         </header>
         <div v-if="article" @scroll="onScroll($event)" class="content full-article">
-            <div v-if="article.img" id="wx_icon" style="display: none">
-                <img :src="article.img">
+            <div v-if="pImgUrl" id="wx_icon" style="display: none">
+                <img :src="pImgUrl">
             </div>
             <h2>{{ article.title }}</h2>
             <div class="article-info">
@@ -134,6 +134,9 @@
                 set(v) {
                     Store.fontSelect = v
                 }
+            },
+            pImgUrl () {
+                return API.pUrl(this.article.img)
             }
         },
 
@@ -165,6 +168,18 @@
         methods: {
             fetchArticle (id) {
                 API.getArticle(id).done((article) => {
+                    var content = article.content
+                    var jContent = $('<div>' + content + '</div>')
+                    jContent.find('img').each((i, el) => {
+                        var jImg = $(el)
+                        var imgUrl = jImg.attr('src')
+                        if (/tuicool\.com/i.test(imgUrl)) {
+                            var purl = API.pUrl(imgUrl)
+                            jImg.attr('src', purl)
+                        }
+                    })
+                    article.content = jContent.html()
+
                     this.article = article
                     document.title = article.title
                 })
